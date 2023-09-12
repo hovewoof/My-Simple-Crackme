@@ -1,20 +1,97 @@
-﻿// hovew-crackme.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+﻿#include <iostream>
+#include <fstream>
+#include <string>
+#include <windows.h>
+#include <wincrypt.h>
 
-#include <iostream>
+const std::string correct_password = "5fe76f1acf6641d00945bae0f0725f6a97681ebab8806856453e299b0370a072";
 
-int main()
-{
-    std::cout << "Hello World!\n";
+std::string hashPassword(const std::string& password) {
+    HCRYPTPROV hCryptProv;
+    if (!CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
+        std::cerr << "Error: CryptAcquireContext failed." << std::endl;
+        return "";
+    }
+
+    HCRYPTHASH hHash;
+    if (!CryptCreateHash(hCryptProv, CALG_SHA_256, 0, 0, &hHash)) {
+        std::cerr << "Error: CryptCreateHash failed." << std::endl;
+        CryptReleaseContext(hCryptProv, 0);
+        return "";
+    }
+
+    if (!CryptHashData(hHash, (const BYTE*)password.c_str(), password.length(), 0)) {
+        std::cerr << "Error: CryptHashData failed." << std::endl;
+        CryptDestroyHash(hHash);
+        CryptReleaseContext(hCryptProv, 0);
+        return "";
+    }
+
+    DWORD dwHashSize = 0;
+    if (!CryptGetHashParam(hHash, HP_HASHSIZE, (BYTE*)&dwHashSize, 0, 0)) {
+        std::cerr << "Error: CryptGetHashParam failed." << std::endl;
+        CryptDestroyHash(hHash);
+        CryptReleaseContext(hCryptProv, 0);
+        return "";
+    }
+
+    std::string result(dwHashSize, 0);
+    if (!CryptGetHashParam(hHash, HP_HASHVAL, (BYTE*)result.data(), &dwHashSize, 0)) {
+        std::cerr << "Error: CryptGetHashParam failed." << std::endl;
+        CryptDestroyHash(hHash);
+        CryptReleaseContext(hCryptProv, 0);
+        return "";
+    }
+
+    CryptDestroyHash(hHash);
+    CryptReleaseContext(hCryptProv, 0);
+
+    return result;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+std::string generateSerial(const std::string& password) {
+    std::string hashedPassword = hashPassword(password);
+    std::string serial = "KEY$";
+    serial += hashedPassword.substr(0, 5);
+    if (hashedPassword.size() >= 10) {
+        serial += hashedPassword.substr(hashedPassword.size() - 5, 5);
+    }
+    else {
+        serial += hashedPassword;
+    }
+    serial += "$";
+    return serial;
+}
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+int main() {
+    std::ifstream input("password.txt");
+
+    if (!input.is_open()) {
+        std::cerr << "Error: Can't open file password.txt." << std::endl;
+        return 1;
+    }
+
+    std::string password;
+    getline(input, password);
+    input.close();
+
+    if (password == correct_password) {
+        std::string serial = generateSerial(correct_password);
+
+        std::ofstream output("serial.txt");
+        if (!output.is_open()) {
+            std::cerr << "Error: Can't open file serial.txt." << std::endl;
+            return 1;
+        }
+
+        output << serial;
+        output.close();
+
+        std::cout << "Success: Serial number has been generated." << std::endl;
+    }
+    else {
+        std::cout << "Error: Incorrect password." << std::endl;
+    }
+
+    return 0;
+}
