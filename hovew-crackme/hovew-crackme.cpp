@@ -1,5 +1,7 @@
 ﻿#include <iostream>
+#include <iomanip>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <windows.h>
 #include <wincrypt.h>
@@ -7,59 +9,55 @@
 const std::string correct_password = "5fe76f1acf6641d00945bae0f0725f6a97681ebab8806856453e299b0370a072";
 
 std::string hashPassword(const std::string& password) {
-    HCRYPTPROV hCryptProv;
-    if (!CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
-        std::cerr << "Error: CryptAcquireContext failed." << std::endl;
+    std::string hashedPassword;
+
+    HCRYPTPROV hProv;
+    if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_FULL, 0)) {
         return "";
     }
 
     HCRYPTHASH hHash;
-    if (!CryptCreateHash(hCryptProv, CALG_SHA_256, 0, 0, &hHash)) {
-        std::cerr << "Error: CryptCreateHash failed." << std::endl;
-        CryptReleaseContext(hCryptProv, 0);
+    if (!CryptCreateHash(hProv, CALG_MD5, 0, 0, &hHash)) {
+        CryptReleaseContext(hProv, 0);
         return "";
     }
 
-    if (!CryptHashData(hHash, (const BYTE*)password.c_str(), password.length(), 0)) {
-        std::cerr << "Error: CryptHashData failed." << std::endl;
+    if (!CryptHashData(hHash, (BYTE*)password.c_str(), password.length(), 0)) {
         CryptDestroyHash(hHash);
-        CryptReleaseContext(hCryptProv, 0);
+        CryptReleaseContext(hProv, 0);
         return "";
     }
 
-    DWORD dwHashSize = 0;
-    if (!CryptGetHashParam(hHash, HP_HASHSIZE, (BYTE*)&dwHashSize, 0, 0)) {
-        std::cerr << "Error: CryptGetHashParam failed." << std::endl;
+    DWORD hashSize = 32;
+    hashedPassword.resize(hashSize);
+    if (!CryptGetHashParam(hHash, HP_HASHVAL, (BYTE*)hashedPassword.data(), &hashSize, 0)) {
         CryptDestroyHash(hHash);
-        CryptReleaseContext(hCryptProv, 0);
-        return "";
-    }
-
-    std::string result(dwHashSize, 0);
-    if (!CryptGetHashParam(hHash, HP_HASHVAL, (BYTE*)result.data(), &dwHashSize, 0)) {
-        std::cerr << "Error: CryptGetHashParam failed." << std::endl;
-        CryptDestroyHash(hHash);
-        CryptReleaseContext(hCryptProv, 0);
+        CryptReleaseContext(hProv, 0);
         return "";
     }
 
     CryptDestroyHash(hHash);
-    CryptReleaseContext(hCryptProv, 0);
+    CryptReleaseContext(hProv, 0);
 
-    return result;
+    return hashedPassword;
 }
 
-std::string generateSerial(const std::string& password) {
-    std::string hashedPassword = hashPassword(password);
+std::string generateSerial() {
+    std::string hashedPassword = hashPassword(correct_password);
+    if (hashedPassword.empty()) {
+        return "";
+    }
     std::string serial = "KEY$";
-    serial += hashedPassword.substr(0, 5);
-    if (hashedPassword.size() >= 10) {
-        serial += hashedPassword.substr(hashedPassword.size() - 5, 5);
+
+    std::string hashPrefix = hashedPassword.substr(0, 8);
+
+    std::stringstream ss;
+    for (char c : hashPrefix) {
+        ss << std::hex << std::setfill('0') << std::setw(2) << (int)c;
     }
-    else {
-        serial += hashedPassword;
-    }
-    serial += "$";
+
+    serial += ss.str();
+
     return serial;
 }
 
@@ -76,7 +74,11 @@ int main() {
     input.close();
 
     if (password == correct_password) {
-        std::string serial = generateSerial(correct_password);
+        std::string serial = generateSerial();
+        if (serial.empty()) {
+            std::cerr << "Error: Can't calculate hash." << std::endl;
+            return 1;
+        }
 
         std::ofstream output("serial.txt");
         if (!output.is_open()) {
