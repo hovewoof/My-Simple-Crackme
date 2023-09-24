@@ -4,17 +4,18 @@
 #include <sstream>
 #include <string>
 #include <cstdint>
+#include <bit>
 #include <windows.h>
 #include <wincrypt.h>
-#include "string_encryption.h"
 #include "misc.h"
+
+#pragma auto_inline(off)
 
 constexpr auto HASH_SIZE = 20;
 std::string correctHashHex = { make_string("F83286A2E7612937EDF208AA79AD0B5EA11F06AB") };
 
 // uses SHA1 algorithm
 char* hash(const char* buf, int size) {
-
     HCRYPTPROV hProv;
     if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_FULL, 0))
         return NULL;
@@ -67,7 +68,9 @@ std::string generateSerial() {
     return serial;
 }
 
-bool auth(char* password, int passwordSize) {
+#pragma runtime_checks("", off)
+#pragma section(".prot", read, execute)
+__declspec(code_seg(".prot")) volatile bool auth(char* password, int passwordSize) {
     char* hashPassword = hash(password, passwordSize);
     char* correctHash = getCorrectHash(correctHashHex);
     if (!memcmp(hashPassword, correctHash, HASH_SIZE)) {
@@ -81,10 +84,24 @@ bool auth(char* password, int passwordSize) {
         return false;
     }
 }
+#pragma section()
+#pragma runtime_checks("", restore)
+
+#pragma data_seg(".xDD"))
+struct _CRC_DATA {
+    volatile DWORD segmentSize = 0xCAFEDEAD;
+    volatile DWORD correctChecksum = 0xDEADBEEF;
+} CRC_DATA;
+#pragma data_seg()
 
 int main() {
-    
+
     std::ifstream input(make_string("password.txt"), std::ios::binary);
+
+    if (!checkCrc(reinterpret_cast<PUCHAR>(auth), reinterpret_cast<PUCHAR>(auth) + CRC_DATA.segmentSize, CRC_DATA.correctChecksum)) {
+        std::cerr << make_string("Error: Incorrect CRC32.") << std::endl;
+        return 1;
+    }
 
     if (!input.is_open()) {
         std::cerr << make_string("Error: Can't open file password.txt.") << std::endl;
