@@ -137,10 +137,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="anti-debug.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="misc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="anti-debug.h" />
     <ClInclude Include="misc.h" />
     <ClInclude Include="string_encryption.h" />
   </ItemGroup>

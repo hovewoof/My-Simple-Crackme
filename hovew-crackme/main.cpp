@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <wincrypt.h>
 #include "misc.h"
+#include "anti-debug.h"
 
 #pragma auto_inline(off)
 
@@ -23,32 +24,26 @@ char* hash(const char* buf, int size) {
     HCRYPTPROV hProv;
     if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_FULL, 0))
         return NULL;
-
     HCRYPTHASH hHash;
     if (!CryptCreateHash(hProv, CALG_SHA1, 0, 0, &hHash)) {
         CryptReleaseContext(hProv, 0);
         return NULL;
     }
-
     if (!CryptHashData(hHash, (BYTE*)buf, size, 0)) {
         CryptDestroyHash(hHash);
         CryptReleaseContext(hProv, 0);
         return NULL;
     }
-
     DWORD hashSize = HASH_SIZE;
     char* hashedPassword = new char[hashSize];
-
     if (!CryptGetHashParam(hHash, HP_HASHVAL, (BYTE*)hashedPassword, &hashSize, 0)) {
         delete[] hashedPassword;
         CryptDestroyHash(hHash);
         CryptReleaseContext(hProv, 0);
         return NULL;
     }
-
     CryptDestroyHash(hHash);
     CryptReleaseContext(hProv, 0);
-
     return hashedPassword;
 }
 
@@ -66,6 +61,7 @@ __declspec(code_seg(".prot")) volatile bool auth(char* password, int passwordSiz
     }
     int r3 = rand() % 8;
     acc = acc >> r3;
+    checkDebug_1();
     acc &= 0xFE;
     if (!memcmp(hashPassword, correctHash, HASH_SIZE)) {
         int r4 = rand() % 256;
@@ -125,6 +121,7 @@ __declspec(code_seg(".prot")) volatile bool auth2(char* c, int n) {
     }
     if (acc % 3 == 0)
         acc *= 3;
+    checkDebug_2();
     char* unusedData = new char[n];
     for (int i = 0; i < n; i++) {
         unusedData[i] = hashPassword[i] ^ i;
@@ -196,12 +193,22 @@ volatile bool fakeCheck_1(char* c, int n) {
     }
     int r3 = rand() % 8;
     acc = acc >> r3;
+    checkDebug_2();
     acc &= 0xFF;
     r4 = r4 << 7;
     int r5 = rand() % 9;
     char* acc2 = correctHash + r5;
     if (!memcmp(hashPassword, correctHash, HASH_SIZE - 10)) {
         acc++;
+        HANDLE hProcess = GetCurrentProcess();
+        PROCESS_BASIC_INFORMATION processInfo;
+        if (NtQueryInformationProcess(hProcess,
+            ProcessBasicInformation,
+            &processInfo,
+            sizeof(processInfo),
+            nullptr) == STATUS_THREAD_NOT_RUNNING) {
+            return false;
+        }
     }
     acc ^= r4;
     if (acc % 2 == 0)
@@ -261,27 +268,24 @@ volatile bool fakeCheck_2(char* c, int n) {
 }
 
 int main() {
-
     std::ifstream input(make_string("password.txt"), std::ios::binary);
-
     if (!checkCrc(reinterpret_cast<PUCHAR>(auth), reinterpret_cast<PUCHAR>(auth) + CRC_DATA.segmentSize, CRC_DATA.correctChecksum)) {
         crc32_changed = true;
     }
-
     if (!input.is_open()) {
         std::cerr << make_string("Error: Can't open file password.txt.") << std::endl;
         return 1;
     }
-
     char password[1024] = { 0 };
     int passwordSize = static_cast<int>(input.read(password, 1024).gcount());
     char check;
+    checkDebug_1();
     if (input.read(&check, 1).gcount() > 0) {
         std::cout << make_string("Error: Incorrect password.") << std::endl;
         return 0;
     }
     input.close();
-
+    checkDebug_4();
     if (fakeCheck_1(password, passwordSize)) {
         std::string serial = generateSerial(password, passwordSize);
         if (serial.empty()) {
@@ -298,6 +302,7 @@ int main() {
         std::cout << make_string("Success: Serial number has been generated.") << std::endl;
     }
     else {
+        checkDebug_3();
         if (auth(password, passwordSize)) {
             std::string serial = generateSerial(password, passwordSize);
             if (serial.empty()) {
