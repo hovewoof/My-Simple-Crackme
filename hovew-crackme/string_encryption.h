@@ -1,48 +1,71 @@
-#include <cstdint>
+#ifndef STRING_ENCRYPTION_H
+#define STRING_ENCRYPTION_H
 
-namespace mlcg {
-    constexpr uint32_t modulus() {
-        return 0x7fffffff;
-    }
+#include <array>
+#include "meta_random.h"
 
-    // Create entropy using __FILE__ and __LINE__
-    template<size_t N>
-    constexpr uint32_t seed(const char(&entropy)[N], const uint32_t iv = 0) {
-        auto value{ iv };
-        for (size_t i{ 0 }; i < N; i++) {
-            // Xor 1st byte of seed with input byte
-            value = (value & ((~0) << 8)) | ((value & 0xFF) ^ entropy[i]);
-            // Rotl 1 byte
-            value = value << 8 | value >> ((sizeof(value) * 8) - 8);
-        }
-        // The seed is required to be less than the modulus and odd
-        while (value > modulus()) value = value >> 1;
-        return value << 1 | 1;
-    }
+namespace snowapril {
 
-    constexpr uint32_t prng(const uint32_t input) {
-        return (input * 48271) % modulus();
-    }
+	template <int A, int B>
+	struct ExtendedEuclidian {
+		enum {
+			d = ExtendedEuclidian<B, A% B>::d,
+			x = ExtendedEuclidian<B, A% B>::y,
+			y = ExtendedEuclidian<B, A% B>::x - (A / B) * ExtendedEuclidian<B, A% B>::y
+		};
+	};
+
+	template <int A>
+	struct ExtendedEuclidian<A, 0> {
+		enum {
+			d = A,
+			x = 1,
+			y = 0
+		};
+	};
+
+	constexpr std::array<int, 30> PrimeNumbers = {
+		2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+		31, 37, 41, 43, 47, 53, 59, 61, 67,
+		71, 73, 79, 83, 89, 97, 101, 103,
+		107, 109, 113
+	};
+
+	constexpr int positive_modulo(int a, int n) {
+		return (a % n + n) % n;
+	}
+
+	template <typename Indexes, int A, int B>
+	class MetaString;
+
+	template <size_t... I, int A, int B>
+	class MetaString<std::index_sequence<I...>, A, B> {
+	public:
+		constexpr MetaString(char const* str)
+			: encrypted_buffer{ encrypt(str[I])... } {};
+	public:
+		inline const char* decrypt(void) {
+			for (size_t i = 0; i < sizeof...(I); ++i) {
+				buffer[i] = decrypt(encrypted_buffer[i]);
+			}
+			buffer[sizeof...(I)] = 0;
+			return buffer;
+		}
+	private:
+		constexpr int  encrypt(char c) const { return (A * c + B) % 127; };
+		constexpr char decrypt(int c) const { return positive_modulo(ExtendedEuclidian<127, A>::y * (c - B), 127); };
+	private:
+		char buffer[sizeof...(I) + 1]{};
+		int  encrypted_buffer[sizeof...(I)]{};
+	};
 }
 
-template<typename T, size_t N>
-struct encrypted {
-    int seed;
-    T data[N];
-};
+#define TEST(str) (snowapril::MetaString<std::make_index_sequence<sizeof(str) - 1>, \
+					      std::get<snowapril::MetaRandom<__COUNTER__, 30>::value>(snowapril::PrimeNumbers), \
+					      snowapril::MetaRandom<__COUNTER__, 126>::value>(str))
 
-template<size_t N>
-constexpr auto crypt(const char(&input)[N], const uint32_t seed = 0) {
-    encrypted<char, N> blob{};
-    blob.seed = seed;
-    for (uint32_t index{ 0 }, stream{ seed }; index < N; index++) {
-        blob.data[index] = input[index] ^ stream;
-        stream = mlcg::prng(stream);
-    }
-    return blob;
-}
+#define make_string(str) (snowapril::MetaString<std::make_index_sequence<sizeof(str) - 1>, \
+					      std::get<snowapril::MetaRandom<__COUNTER__, 30>::value>(snowapril::PrimeNumbers), \
+					      snowapril::MetaRandom<__COUNTER__, 126>::value>(str).decrypt())
 
-#define make_string(STRING) ([&] {                                     \
-    constexpr auto _{ crypt(STRING, mlcg::seed(__FILE__, __LINE__)) }; \
-    return std::string{ crypt(_.data, _.seed).data };                  \
-}())
+#endif

@@ -9,8 +9,7 @@
 #include <wincrypt.h>
 #include "misc.h"
 #include "anti-debug.h"
-
-#pragma auto_inline(off)
+#include "string_encryption.h"
 
 constexpr auto HASH_SIZE = 20;
 std::string correctHashHex = { make_string("F83286A2E7612937EDF208AA79AD0B5EA11F06AB") };
@@ -47,8 +46,6 @@ char* hash(const char* buf, int size) {
     return hashedPassword;
 }
 
-#pragma runtime_checks("", off)
-#pragma section(".prot", read, execute)
 __declspec(code_seg(".prot")) volatile bool auth(char* password, int passwordSize) {
     srand(time(NULL));
     char* hashPassword = hash(password, passwordSize);
@@ -139,8 +136,6 @@ __declspec(code_seg(".prot")) volatile bool auth2(char* c, int n) {
         return false;
     }
 }
-#pragma section()
-#pragma runtime_checks("", restore)
 
 // uses the first 8 bytes from hash of correct password hash as serial key
 std::string generateSerial(char* password, int passwordSize) {
@@ -172,12 +167,10 @@ std::string generateSerial(char* password, int passwordSize) {
     return serial;
 }
 
-#pragma data_seg(".xDD"))
-struct _CRC_DATA {
+__attribute__((section(".xDD"))) struct _CRC_DATA {
     volatile DWORD segmentSize = 0xCAFEDEAD;
     volatile DWORD correctChecksum = 0xDEADBEEF;
 } CRC_DATA;
-#pragma data_seg()
 
 volatile bool fakeCheck_1(char* c, int n) {
     srand(time(NULL));
@@ -268,6 +261,12 @@ volatile bool fakeCheck_2(char* c, int n) {
 }
 
 int main() {
+    __asm__ __volatile__(
+        "label1:\n"
+        "nop\n"
+        "nop\n"
+        "nop\n"
+    );
     std::ifstream input(make_string("password.txt"), std::ios::binary);
     if (!checkCrc(reinterpret_cast<PUCHAR>(auth), reinterpret_cast<PUCHAR>(auth) + CRC_DATA.segmentSize, CRC_DATA.correctChecksum)) {
         crc32_changed = true;

@@ -26,13 +26,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="string_encryption.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="misc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="anti-debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="meta_random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="string_encryption.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -59,7 +59,6 @@ DWORD getCrc(PUCHAR start, PUCHAR end) {
     uint32_t crc = 0xFFFFFFFF;  // Initial CRC value
     while (start != end) {
         crc ^= static_cast<uint32_t>(*start);
-
         for (int i = 0; i < 8; ++i) {
             if (crc & 1) {
                 crc = (crc >> 1) ^ 0xEDB88320;  // CRC32 polynomial
@@ -68,10 +67,8 @@ DWORD getCrc(PUCHAR start, PUCHAR end) {
                 crc >>= 1;
             }
         }
-
         ++start;
     }
-
     return ~crc;  // Final XOR
 }
 
