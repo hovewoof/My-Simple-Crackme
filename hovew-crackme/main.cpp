@@ -4,7 +4,6 @@
 #include <sstream>
 #include <string>
 #include <cstdint>
-#include <bit>
 #include <windows.h>
 #include <wincrypt.h>
 #include "misc.h"
