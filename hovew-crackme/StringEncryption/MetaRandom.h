@@ -1,7 +1,7 @@
 #ifndef META_RANDOM_H
 #define META_RANDOM_H
 
-#include <limits>
+#include "pch.h"
 
 namespace snowapril {
     constexpr int RandomSeed(void) {
@@ -36,4 +36,4 @@ namespace snowapril {
 
 }
 
-#endif
+#endif //META_RANDOM_H

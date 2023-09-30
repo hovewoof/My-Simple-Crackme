@@ -1,8 +1,9 @@
 #ifndef STRING_ENCRYPTION_H
 #define STRING_ENCRYPTION_H
 
-#include <array>
-#include "meta_random.h"
+#include "pch.h"
+
+#include "MetaRandom.h"
 
 namespace snowapril {
 
@@ -68,4 +69,4 @@ namespace snowapril {
 					      std::get<snowapril::MetaRandom<__COUNTER__, 30>::value>(snowapril::PrimeNumbers), \
 					      snowapril::MetaRandom<__COUNTER__, 126>::value>(str).decrypt())
 
-#endif
+#endif //STRING_ENCRYPTION_H

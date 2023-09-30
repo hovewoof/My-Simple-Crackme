@@ -1,42 +1,140 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="hovew-crackme.cpp" />
+    <ClCompile Include="AntiDisassm\AntiDisassm.cpp">
+      <Filter>AntiDisassm\Source</Filter>
     </ClCompile>
-    <ClCompile Include="misc.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AntiDebug\AntiDebug.cpp">
+      <Filter>AntiDebug\Source</Filter>
     </ClCompile>
-    <ClCompile Include="anti-debug.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="CRC\CRC.cpp">
+      <Filter>CRC\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Authentication\Authentication.cpp">
+      <Filter>Authentication\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="FakeChecks\FakeChecks.cpp">
+      <Filter>FakeChecks\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Hash\Hash.cpp">
+      <Filter>Hash\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="misc.h">
-      <Filter>Header Files</Filter>
+    <Filter Include="AntiDisassm">
+      <UniqueIdentifier>{43d04ad3-983f-4e75-b58d-5db5e867e7a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AntiDisassm\Header">
+      <UniqueIdentifier>{312d9aa9-5dbd-47bd-97f3-3f0930be8a30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AntiDisassm\Source">
+      <UniqueIdentifier>{6b524e9c-5705-45ed-aeea-ac43081c3405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AntiDebug">
+      <UniqueIdentifier>{8e55b348-92c7-4ae6-8c89-824f8cdde5d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AntiDebug\Header">
+      <UniqueIdentifier>{d65cd81a-88ce-4e6a-9fcb-1f977987df40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AntiDebug\Source">
+      <UniqueIdentifier>{8e3b5b1f-178d-4659-8827-9b43315af0ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StringEncryption">
+      <UniqueIdentifier>{750f17d9-42df-4d07-8fc0-6e3821856451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StringEncryption\Header">
+      <UniqueIdentifier>{785ae35b-1e65-4b8e-89f2-e6bb97626836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CRC">
+      <UniqueIdentifier>{13559140-ea56-479d-a1d0-074e50b91923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CRC\Header">
+      <UniqueIdentifier>{a46b6b8e-3197-4aad-b03c-7517d0915d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CRC\Source">
+      <UniqueIdentifier>{82096cea-8c04-47a2-bd91-637c631c44ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentication">
+      <UniqueIdentifier>{d5ddb6c6-1791-44bf-a168-b3e223ea3606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentication\Header">
+      <UniqueIdentifier>{2aeef5c5-a54e-471e-944d-44e20bd6f53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentication\Source">
+      <UniqueIdentifier>{97b497da-d81e-41e0-95a2-8f5c18f9cb62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FakeChecks">
+      <UniqueIdentifier>{3988d153-8f0c-4a70-a3a7-9842d608a70e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FakeChecks\Header">
+      <UniqueIdentifier>{444baec6-3dcb-4149-a330-60be2dcd4952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FakeChecks\Source">
+      <UniqueIdentifier>{28d654e7-5530-408f-8ec8-7d1d371e2632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hash">
+      <UniqueIdentifier>{6b6333df-a99e-483d-9e69-04b4fc9157db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hash\Header">
+      <UniqueIdentifier>{79be5d24-43dd-41f6-9a22-a4a84af4648c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hash\Source">
+      <UniqueIdentifier>{a365bffd-d834-4d77-9522-7ab87b679f6f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AntiDisassm\AntiDisassm.h">
+      <Filter>AntiDisassm\Header</Filter>
     </ClInclude>
-    <ClInclude Include="anti-debug.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="AntiDisassm\pch.h">
+      <Filter>AntiDisassm\Header</Filter>
     </ClInclude>
-    <ClInclude Include="meta_random.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="AntiDebug\AntiDebug.h">
+      <Filter>AntiDebug\Header</Filter>
     </ClInclude>
-    <ClInclude Include="string_encryption.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="AntiDebug\pch.h">
+      <Filter>AntiDebug\Header</Filter>
     </ClInclude>
+    <ClInclude Include="StringEncryption\MetaRandom.h">
+      <Filter>StringEncryption\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="StringEncryption\StringEncryption.h">
+      <Filter>StringEncryption\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="StringEncryption\pch.h">
+      <Filter>StringEncryption\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CRC\pch.h">
+      <Filter>CRC\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CRC\CRC.h">
+      <Filter>CRC\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Authentication\Authentication.h">
+      <Filter>Authentication\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Authentication\pch.h">
+      <Filter>Authentication\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FakeChecks\pch.h">
+      <Filter>FakeChecks\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FakeChecks\FakeChecks.h">
+      <Filter>FakeChecks\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Hash\pch.h">
+      <Filter>Hash\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Hash\Hash.h">
+      <Filter>Hash\Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="AntiDisassm\AntiDisassm_x64.asm">
+      <Filter>AntiDisassm\Source</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
