@@ -8,6 +8,7 @@ This repository contains the "crackme" project, a program that utilizes various 
 - 3 anti-disassembly methods
 - 2 virtual machine detection methods
 - Using an exception to control the flow of execution
+- Self-modifying code techniques
 - Minor obfuscation and fake checks
 
 The program reads a password from a file called `password.txt` located in the same directory as the executable. It then checks the entered password, and if the check is successful, it generates a serial key in the format "KEY$..." and writes it to a file named `serial.txt`.
