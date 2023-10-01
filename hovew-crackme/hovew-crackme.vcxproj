@@ -82,7 +82,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -124,7 +124,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -145,7 +145,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="AntiDebug\AntiDebug.cpp" />
     <ClCompile Include="AntiDisassm\AntiDisassm.cpp" />
+    <ClCompile Include="AntiVM\AntiVM.cpp" />
     <ClCompile Include="Authentication\Authentication.cpp" />
     <ClCompile Include="CRC\CRC.cpp" />
     <ClCompile Include="FakeChecks\FakeChecks.cpp" />
@@ -169,12 +170,15 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SelfModifyingCode\SelfModifyingCode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntiDebug\AntiDebug.h" />
     <ClInclude Include="AntiDebug\pch.h" />
     <ClInclude Include="AntiDisassm\AntiDisassm.h" />
     <ClInclude Include="AntiDisassm\pch.h" />
+    <ClInclude Include="AntiVM\AntiVM.h" />
+    <ClInclude Include="AntiVM\pch.h" />
     <ClInclude Include="Authentication\Authentication.h" />
     <ClInclude Include="Authentication\pch.h" />
     <ClInclude Include="CRC\CRC.h" />
@@ -184,6 +188,8 @@
     <ClInclude Include="Hash\Hash.h" />
     <ClInclude Include="Hash\pch.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SelfModifyingCode\pch.h" />
+    <ClInclude Include="SelfModifyingCode\SelfModifyingCode.h" />
     <ClInclude Include="StringEncryption\MetaRandom.h" />
     <ClInclude Include="StringEncryption\pch.h" />
     <ClInclude Include="StringEncryption\StringEncryption.h" />

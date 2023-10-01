@@ -21,6 +21,12 @@
     <ClCompile Include="Hash\Hash.cpp">
       <Filter>Hash\Source</Filter>
     </ClCompile>
+    <ClCompile Include="AntiVM\AntiVM.cpp">
+      <Filter>AntiVM\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="SelfModifyingCode\SelfModifyingCode.cpp">
+      <Filter>SelfModifyingCode\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="AntiDisassm">
@@ -83,6 +89,24 @@
     <Filter Include="Hash\Source">
       <UniqueIdentifier>{a365bffd-d834-4d77-9522-7ab87b679f6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AntiVM">
+      <UniqueIdentifier>{eea819f5-d291-4ae6-9488-21e0afeafb93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AntiVM\Header">
+      <UniqueIdentifier>{beff0611-8bbf-4eea-8749-338fb74a34f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AntiVM\Source">
+      <UniqueIdentifier>{a7431ec1-5b62-4c47-8f39-87460bd56e52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SelfModifyingCode">
+      <UniqueIdentifier>{a3afd0de-56d4-475a-af09-c37a3deffcce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SelfModifyingCode\Header">
+      <UniqueIdentifier>{1f20387e-0b8e-4369-9bf5-63603a63fbdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SelfModifyingCode\Source">
+      <UniqueIdentifier>{a6435b6e-d16b-45fb-a0f9-5a26c6d06ed1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntiDisassm\AntiDisassm.h">
@@ -130,6 +154,18 @@
     </ClInclude>
     <ClInclude Include="Hash\Hash.h">
       <Filter>Hash\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiVM\pch.h">
+      <Filter>AntiVM\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiVM\AntiVM.h">
+      <Filter>AntiVM\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SelfModifyingCode\pch.h">
+      <Filter>SelfModifyingCode\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SelfModifyingCode\SelfModifyingCode.h">
+      <Filter>SelfModifyingCode\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

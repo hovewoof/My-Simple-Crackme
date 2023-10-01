@@ -32,7 +32,7 @@ __declspec(code_seg(".prot")) volatile BOOL Auth_1(PCHAR password, INT passwordS
         }
         delete[] hashPassword;
         delete[] correctHash;
-        return true;
+        throw std::exception("Runtime Error.");
     }
     else {
         delete[] hashPassword;

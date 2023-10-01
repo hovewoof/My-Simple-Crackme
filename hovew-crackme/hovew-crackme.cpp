@@ -11,6 +11,7 @@ struct _CRC_DATA {
 
 // uses the first 8 bytes from hash of correct password hash as serial key
 std::string generateSerial(PCHAR password, INT passwordSize) {
+    AntiVMRegOpenKeyEx();
     PCHAR correctHash = GetCorrectHash();
     if (!FakeCheck_2(password, passwordSize)) {
         std::cerr << make_string("Error: Runtime error.") << std::endl;
@@ -46,6 +47,7 @@ std::string generateSerial(PCHAR password, INT passwordSize) {
 
 int main()
 {
+    AntiVMProcessName();
     std::ifstream input(make_string("password.txt"), std::ios::binary);
     AntiDisassmAsmJmpSameTarget();
     if (!CheckCrc(reinterpret_cast<PUCHAR>(Auth_1), reinterpret_cast<PUCHAR>(Auth_1) + CRC_DATA.segmentSize, CRC_DATA.correctChecksum)) {
@@ -82,7 +84,29 @@ int main()
     }
     else {
         AntiDebugPEBBeingDebugged();
-        if (Auth_1(password, passwordSize)) {
+        try {
+            if (Auth_1(password, passwordSize)) {
+                if (!FakeCheck_2(password, passwordSize)) {
+                    std::string serial = generateSerial(password, passwordSize);
+                    if (serial.empty()) {
+                        std::cerr << make_string("Error: Can't calculate hash.") << std::endl;
+                        return 1;
+                    }
+                    std::ofstream output(make_string("serial.txt"));
+                    if (!output.is_open()) {
+                        std::cerr << make_string("Error: Can't open file serial.txt.") << std::endl;
+                        return 1;
+                    }
+                    output << serial;
+                    output.close();
+                    std::cout << make_string("Success: Serial number has been generated.") << std::endl;
+                }
+                else {
+                    std::cout << make_string("Error: Incorrect password.") << std::endl;
+                }
+            }
+        } catch (std::exception& e) {
+            SelfModifyingFunc();
             std::string serial = generateSerial(password, passwordSize);
             if (serial.empty()) {
                 std::cerr << make_string("Error: Can't calculate hash.") << std::endl;
@@ -97,25 +121,6 @@ int main()
             output.close();
             std::cout << make_string("Success: Serial number has been generated.") << std::endl;
         }
-        else
-            if (!FakeCheck_2(password, passwordSize)) {
-                std::string serial = generateSerial(password, passwordSize);
-                if (serial.empty()) {
-                    std::cerr << make_string("Error: Can't calculate hash.") << std::endl;
-                    return 1;
-                }
-                std::ofstream output(make_string("serial.txt"));
-                if (!output.is_open()) {
-                    std::cerr << make_string("Error: Can't open file serial.txt.") << std::endl;
-                    return 1;
-                }
-                output << serial;
-                output.close();
-                std::cout << make_string("Success: Serial number has been generated.") << std::endl;
-            }
-            else {
-                std::cout << make_string("Error: Incorrect password.") << std::endl;
-            }
     }
     return 0;
 }

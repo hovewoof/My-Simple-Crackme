@@ -10,6 +10,7 @@
 
 #include <windows.h>
 #include <winternl.h>
+#include <Tlhelp32.h>
 
 #pragma comment(lib, "ntdll.lib")
 
@@ -33,5 +34,11 @@
 
 /* Anti-Disassembly */
 #include "AntiDisassm\AntiDisassm.h"
+
+/* Anti-VM */
+#include "AntiVM\AntiVM.h"
+
+/* Self-modifying Code */
+#include "SelfModifyingCode\SelfModifyingCode.h"
 
 #endif //PCH_H

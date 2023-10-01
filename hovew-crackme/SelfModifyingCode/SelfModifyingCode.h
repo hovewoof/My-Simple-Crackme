@@ -1,0 +1,6 @@
+#ifndef SELFMODIFYINGCODE_H
+#define SELFMODIFYINGCODE_H
+
+volatile VOID SelfModifyingFunc();
+
+#endif //SELFMODIFYINGCODE_H
