@@ -11,7 +11,7 @@ This repository contains the "crackme" project, a program that utilizes various 
 - Self-modifying code techniques
 - Minor obfuscation and fake checks
 
-The program reads a password from a file called `password.txt` located in the same directory as the executable. It then checks the entered password, and if the check is successful, it generates a serial key in the format "KEY$..." and writes it to a file named `serial.txt`.
+The program reads a password from a file called `password.txt` located in the same directory as the executable. Then it checks the password contained therein, and if the check is successful, it generates a serial key in the format "KEY$..." and writes it to a file named `serial.txt`.
 
 ## Development and Testing Environment
 
@@ -30,7 +30,7 @@ To compile and run the program, ensure you have the specified development enviro
 
 ## Contributing
 
-Contributions to improve or expand this crackme project are welcome! Feel free to submit pull requests, report issues, or suggest new features.
+Contributions to improve or expand this project are welcome! Feel free to submit pull requests, report issues, or suggest new features.
 
 ## License
 
